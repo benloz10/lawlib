@@ -1,0 +1,1 @@
+util.AddNetworkString("lawlib_openmenu")
