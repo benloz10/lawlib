@@ -69,6 +69,7 @@ function LFrame:AddElements()
     self.CloseButton:SetFont("DermaLarge")
     function self.CloseButton:OnMousePressed()
         self.Root:Remove()
+        if self.Root.CloseSound then surface.PlaySound(self.Root.CloseSound) end
     end
     self:InvalidateLayout()
 
@@ -83,3 +84,26 @@ function LFrame:Paint(w,h)
 end
 
 vgui.Register("LFrame", LFrame, "DPanel")
+
+local LProgress = {}
+
+function LProgress:Init()
+    self:SetBackgroundColor(Color(23,23,23))
+	self:SetPaintBackgroundEnabled( false )
+	self:SetPaintBorderEnabled( false )
+
+    self.Bar = vgui.Create("DPanel", self)
+    self.Bar:Dock(LEFT)
+    self.Bar:SetWide(0)
+    self.Bar:SetBackgroundColor(Color(0,255,255))
+end
+
+function LProgress:SetFraction(val)
+    self.Bar:SetWide(self:GetWide()*val)
+end
+
+function LProgress:SetFGColor(col)
+    self.Bar:SetBackgroundColor(col)
+end
+
+vgui.Register("LProgress", LProgress, "DPanel")

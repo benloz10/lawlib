@@ -2,7 +2,7 @@ if !LAWLIB.Networking then LAWLIB.Networking = {} end
 if !LAWLIB.Networking.Menus then LAWLIB.Networking.Menus = {} end
 
 function LAWLIB:RegisterMenu(menuName, menuTable)
-    LAWLIB.MENUS[menuName] = menuTable
+    LAWLIB.Networking.Menus[menuName] = menuTable
 end
 
 net.Receive("lawlib_openmenu", function()
