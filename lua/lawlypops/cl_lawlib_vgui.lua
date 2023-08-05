@@ -107,3 +107,91 @@ function LProgress:SetFGColor(col)
 end
 
 vgui.Register("LProgress", LProgress, "DPanel")
+
+local LConfirm = {}
+
+function LConfirm:Init()
+    self:SetSize(ScrW()*0.3, ScrW()*0.07)
+    self:DockPadding(10,10,10,10)
+    self:SetBackgroundColor(Color(40,40,40))
+    self:Center()
+    self:AddElements()
+    self:MakePopup()
+
+    self.OutlineColor = Color(100,100,100)
+
+    self.BGFade = vgui.Create("DPanel")
+    self.BGFade:SetSize(ScrW(), ScrH())
+    self.BGFade:SetBackgroundColor(Color(0,0,0,240))
+end
+
+function LConfirm:OnRemove()
+    self.BGFade:Remove()
+end
+
+function LConfirm:Paint(w,h)
+    surface.SetDrawColor(self:GetBackgroundColor())
+    surface.DrawRect(0,0,w,h)
+    surface.SetDrawColor(self.OutlineColor)
+    surface.DrawOutlinedRect(0,0,w,h,4)
+end
+
+function LConfirm:SetTitle(txt)
+    self.Text:SetText(txt)
+end
+function LConfirm:SetTitleColor(col)
+    self.Text:SetTextColor(col)
+end
+function LConfirm:SetConfirmText(txt)
+    self.YesBtn:SetText(txt)
+end
+function LConfirm:SetDenyText(txt)
+    self.NoBtn:SetText(txt)
+end
+function LConfirm:GetLabel()
+    return self.Text
+end
+function LConfirm:GetConfirmButton()
+    return self.YesBtn
+end
+function LConfirm:GetDenyButton()
+    return self.NoBtn
+end
+
+function LConfirm:AddElements()
+    self.Text = vgui.Create("DLabel", self)
+    self.YesBtn = vgui.Create("LButton", self)
+    self.NoBtn = vgui.Create("LButton", self)
+
+    self.Text:DockMargin(5,5,5,10)
+    self.Text:Dock(TOP)
+    self.Text:SetTall(self:GetTall()*0.5)
+    self.Text:SetContentAlignment(7)
+
+    self.Text:SetText("Are you sure?")
+    self.Text:SetFont("DermaLarge")
+    self.Text:SetTextColor(Color(255,255,255))
+    self.Text:SetContentAlignment(8)
+
+    self.YesBtn:SetText("Yes")
+    self.YesBtn:SetFont("DermaLarge")
+    self.YesBtn:SetTextColor(Color(0,200,0))
+    self.YesBtn:Dock(LEFT)
+    self.YesBtn:SetWide(self:GetWide()*0.4)
+    self.YesBtn.OnMousePressed = function()
+        if self.ConfirmAction then self:ConfirmAction() end
+        self:Remove()
+    end
+
+    self.NoBtn:SetText("No")
+    self.NoBtn:SetFont("DermaLarge")
+    self.NoBtn:SetTextColor(Color(200,0,0))
+    self.NoBtn:Dock(RIGHT)
+    self.NoBtn:SetWide(self:GetWide()*0.4)
+    self.NoBtn.OnMousePressed = function()
+        if self.DenyAction then self:DenyAction() end
+        self:Remove()
+    end
+end
+
+vgui.Register("LConfirm", LConfirm, "DPanel")
