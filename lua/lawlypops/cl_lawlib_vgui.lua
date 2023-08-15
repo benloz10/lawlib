@@ -99,6 +99,8 @@ function LProgress:Init()
 end
 
 function LProgress:SetFraction(val)
+    if val == nil then val = 0 end
+    val = math.Clamp(val, 0, 1)
     self.Bar:SetWide(self:GetWide()*val)
 end
 
