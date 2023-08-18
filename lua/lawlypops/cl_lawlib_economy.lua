@@ -1,0 +1,3 @@
+function LAWLIB:GetShopItemNames()
+
+end
