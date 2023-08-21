@@ -1,8 +1,13 @@
-if !LAWLIB.Networking then LAWLIB.Networking = {} end
-if !LAWLIB.Networking.Menus then LAWLIB.Networking.Menus = {} end
+if !LAWLIB.Menus then LAWLIB.Menus = {} end
 
 function LAWLIB:RegisterMenu(menuName, menuTable)
-    LAWLIB.Networking.Menus[menuName] = menuTable
+    LAWLIB.Menus[menuName] = menuTable
+end
+
+function LAWLIB:OpenMenu(_Type, cmd)
+    local menu = LAWLIB.Menus[_Type]
+    if menu == nil then return end
+    menu:CreateMenu(cmd)
 end
 
 function LAWLIB:OpenEntMenu(ent, cmd)
@@ -15,9 +20,9 @@ end
 
 net.Receive("lawlib_openmenu", function()
     local _Type = net.ReadString()
-    if LAWLIB.Networking.Menus[_Type] then
+    if LAWLIB.Menus[_Type] then
         //MsgN("[LAWLIB] Recieved request to open \"" .. _Type .. "\"")
-        local menu = LAWLIB.Networking.Menus[_Type]
+        local menu = LAWLIB.Menus[_Type]
         local ent = net.ReadEntity()
         local cmd = net.ReadString()
         local tbl = {}
