@@ -7,7 +7,8 @@ net.Receive("lawlib_notify", function()
 end)
 
 local NotifStyles = {
-    {TxtCol = Color(255,255,255), Icon = "materials/icon16/lightbulb.png"}
+    {TxtCol = Color(255,255,255), Icon = "materials/icon16/lightbulb.png"},
+    {TxtCol = Color(255,31,31), Icon = "materials/icon16/lightbulb.png"}
 }
 
 local ActiveNotifs = {}
