@@ -1,9 +1,10 @@
 LAWLIB.ShopData = {}
 
-function LAWLIB:PurchaseItem(itemID)
+function LAWLIB:PurchaseItem(itemID, pos)
     net.Start("lawlib_economy")
         net.WriteUInt(0, 8) -- Purchase Item
         net.WriteString(itemID)
+        net.WriteVector(pos)
     net.SendToServer()
 end
 
