@@ -11,9 +11,9 @@ vgui.Register("LButton", LButton, "DButton")
 
 local LFrame = {}
 function LFrame:Init()
-    self:SetBackgroundColor(Color(40,40,40))
-	self:SetPaintBackgroundEnabled( false )
-	self:SetPaintBorderEnabled( false )
+    self.BGColor = Color(40,40,40)
+	self:SetPaintBackgroundEnabled( true )
+	self:SetPaintBorderEnabled( true )
 
     self.DefaultText = ""
     self.HoverText = nil
@@ -78,12 +78,11 @@ end
 
 
 function LFrame:Paint(w,h)
-	local color = self:GetBackgroundColor()
-	surface.SetDrawColor(color)
+	surface.SetDrawColor(self.BGColor)
 	surface.DrawRect(0, 0, w, h)
 end
 
-vgui.Register("LFrame", LFrame, "DPanel")
+vgui.Register("LFrame", LFrame, "EditablePanel")
 
 local LProgress = {}
 
