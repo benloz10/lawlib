@@ -90,7 +90,7 @@ net.Receive("lawlib_economy", function(len, ply)
             newEnt:Spawn()
             newEnt:DropToFloor()
             newEnt:PhysWake()
-            newEnt.Owner = ply
+            newEnt:SetNWEntity("Owner", ply)
         end
         if DarkRP then
             local money = ply:getDarkRPVar("money")
