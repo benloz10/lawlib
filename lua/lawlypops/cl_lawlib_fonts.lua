@@ -8,3 +8,8 @@ surface.CreateFont("LAWLIB:Large", {
     size = 40,
     weight = 1000
 })
+
+surface.CreateFont("LAWLIB:Monospace", {
+    font = "Consolas",
+    size = 20
+})

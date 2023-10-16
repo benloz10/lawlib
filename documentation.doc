@@ -1,0 +1,104 @@
+LAWLIB (Lawly's Library) is intended to be used with any of my addons. Most requiring it.
+
+Fonts:
+    LAWLIB:ExtraLarge
+    LAWLIB:Large
+    LAWLIB:Monospace
+
+VGUI:
+    LButton
+    LConfirm
+    LFrame
+    LProgress
+
+Nofification Types:
+    1 = White text.
+    2 = Red text.
+
+Function documentation:
+    Economy:
+        SERVER:
+            LAWLIB:AddShopItem(itemID, niceName, cost, itemType, class, limit)
+                -Registers an item to be purchased from a shop menu.
+                String itemID       : A unique id for an item for reference.
+                String niceName     : The name that will be visible to players.
+                Float cost          : How much the item will cost.
+                String itemType     : Either "weapon" or "entity". Will be given or spawned respectively.
+                String class        : The class of the item to be spawned.
+                Int limit           : The maximum number of these a player can purchase at a time (For entities.)
+                
+            LAWLIB:SendShopData(specificID)
+                -Update clients with stored shop items.
+                String specificID   : The registered ID if only one item should be sent. Otherwise updates all items.
+
+        CLIENT:
+            LAWLIB:PurchaseItem(itemID, pos)
+                -Requests purchase of the requested item id from server.
+                Vector3 pos : position to spawn the entity.
+    
+    Menus:
+        SERVER:
+            LAWLIB:OpenMenu(menuName, ply, ent, tbl, cmd)
+                -Requests opening the registered menu for the given player.
+                Entity ent  : A tied entity to be used by the menu.
+                Table tbl   : A table of data that can be sent if necessary.
+                String cmd  : String that can be sent to the menu for optional use.
+
+        CLIENT:
+            LAWLIB:RegisterMenu(menuName, menuTable)
+                -Registers a menu that can be opened later with OpenMenu
+                String menuName     : A unique name to identify the menu.
+                Table menuTable     : The table of the menu. Requires a menuTable:CreateMenu(cmd) function.
+
+            LAWLIB:OpenMenu(menuName, cmd)
+                -Opens the menu by the unique name.
+                String menuName     : The unique name of the menu.
+                String cmd          : Optional data to be sent to the menu.
+
+            LAWLIB:OpenEntMenu(ent, cmd)
+                -Opens a menu tied to an entity.
+                Entity ent      : The entity for the menu's usage.
+                String cmd      : Optional data to be sent to the menu.
+
+    Notify:
+        SERVER:
+        LAWLIB:Notify(ply, txt, style, len)
+            -Send a notification to a player.
+            Player ply  : Recieving player.
+            String txt  : The text for the notification.
+            UInt style  : Specific style for the menu (See menu styles at the top of this doc.)
+            UInt len    : How long to display the notification for. (Max 255 seconds, clamped internally.)
+
+        CLIENT:
+        LAWLIB:Notify(txt, style, len)
+            -Creates a notification for the LocalPlayer()
+            String txt  : The text for the notification.
+            UInt style  : Specific style for the menu (See menu styles at the top of this doc.)
+            UInt len    : How long to display the notification for. (Max 255 seconds, clamped internally.)
+
+    Strings:
+        SHARED:
+        LAWLIB:SpaceBuffer(txt, len)
+            -Returns text with spaces at the end to reach the requested length.
+            String txt  : Text to concat to.
+            Int len     : How long the returned text should be.
+            Returns: String
+
+    Tables:
+        SHARED:
+        LAWLIB:TableWeightedSelect(tbl)
+            -Returns an item from a table based on attatched weights. Each item inside the table should have a [Weight] value.
+            Table tbl   : The table to select from.
+
+        LAWLIB:TableApplyWeights(tbl)
+            -Calculates the total weight of a table for use with weighted selection. Attatches a [TotalWeight] key to the table.
+            Table tbl   : The table to calculate.
+    Time:
+        SHARED:
+        LAWLIB:GetTimePhrase(lower)
+            -Returns a phrase representing the current OS time. (Morning, Afternoon, etc.)
+            Bool lower  : If the first letter should be lowercase or not.
+        LAWLIB:GetTimeText(time)
+            -Returns a formated time text with the given time.
+            Int time    : Time in seconds to calculate.
+            Example: 1 day, 4 hours, 13 minutes, 2 seconds
