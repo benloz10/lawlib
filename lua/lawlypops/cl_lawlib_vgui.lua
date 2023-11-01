@@ -61,12 +61,13 @@ function LFrame:AddElements()
     end
 
     self.CloseButton = vgui.Create("LButton", self.TitleBar)
-    self.CloseButton:SetSize(26,30)
+    self.CloseButton:SetSize(27,30)
     self.CloseButton:DockMargin(2,2,2,2)
     self.CloseButton:Dock(RIGHT)
     self.CloseButton.Root = self
     self.CloseButton:SetText("X")
-    self.CloseButton:SetFont("DermaLarge")
+    self.CloseButton:SetFont("LAWLIB:Monospace:Large")
+    self.CloseButton:SetContentAlignment(5)
     function self.CloseButton:OnMousePressed()
         self.Root:Remove()
         if self.Root.CloseSound then surface.PlaySound(self.Root.CloseSound) end

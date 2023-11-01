@@ -4,6 +4,7 @@ Fonts:
     LAWLIB:ExtraLarge
     LAWLIB:Large
     LAWLIB:Monospace
+    LAWLIB:Monospace:Large
 
 VGUI:
     LButton

@@ -13,3 +13,10 @@ surface.CreateFont("LAWLIB:Monospace", {
     font = "Consolas",
     size = 20
 })
+
+surface.CreateFont("LAWLIB:Monospace:Large", {
+    font = "Consolas",
+    size = 40,
+    weight = 1000,
+    bold = true
+})
