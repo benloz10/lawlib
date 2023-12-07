@@ -23,6 +23,10 @@ function LFrame:Init()
     end)
 end
 
+function LFrame:GetTitleHeight()
+    return 30
+end
+
 function LFrame:SetTitle(txt)
     self.DefaultText = txt
 end
