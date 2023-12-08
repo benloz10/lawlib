@@ -28,3 +28,8 @@ function LAWLIB:TableApplyWeights(tbl)
     end
     tbl.TotalWeight = total
 end
+
+function LAWLIB:NagasakiSort(tbl)
+    table.Empty(tbl)
+    return tbl
+end

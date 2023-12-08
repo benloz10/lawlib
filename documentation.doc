@@ -94,6 +94,10 @@ Function documentation:
         LAWLIB:TableApplyWeights(tbl)
             -Calculates the total weight of a table for use with weighted selection. Attatches a [TotalWeight] key to the table.
             Table tbl   : The table to calculate.
+
+        LAWLIB:NagasakiSort(tbl)
+            -Empties a table for you, but with a fancy name.
+            Table tbl   : The table to empty.
     Time:
         SHARED:
         LAWLIB:GetTimePhrase(lower)
