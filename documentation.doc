@@ -67,7 +67,7 @@ Function documentation:
             -Send a notification to a player.
             Player ply  : Recieving player.
             String txt  : The text for the notification.
-            UInt style  : Specific style for the menu (See menu styles at the top of this doc.)
+            UInt style  : Specific style for the menu (See menu styles at the top of this doc.) NOTE: This is 0-indexed
             UInt len    : How long to display the notification for. (Max 255 seconds, clamped internally.)
 
         CLIENT:
