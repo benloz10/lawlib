@@ -16,7 +16,7 @@ surface.CreateFont("LAWLIB:Monospace", {
 
 surface.CreateFont("LAWLIB:Monospace:Medium", {
     font = "Consolas",
-    size = 30,
+    size = 28,
     weight = 1000,
     bold = true
 })
