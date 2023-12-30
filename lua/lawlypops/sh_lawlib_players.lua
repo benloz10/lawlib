@@ -25,3 +25,17 @@ function LAWLIB:GetVisiblePlayers(ply, dist)
     end
     return visible
 end
+
+function LAWLIB:GetTopOfPlayer(ply, heightOffset)
+    if not IsValid(ply) then return end
+    if heightOffset == nil then heightOffset = 0 end
+    local hMin = ply:OBBMins()
+    local hMax = ply:OBBMaxs()
+    local height = hMax.z - hMin.z + heightOffset
+    local pos = ply:GetPos()
+    pos.z = pos.z + hMax.z
+    if ply:IsPony() then
+        pos = pos + ply:GetUp() * (height * 0.35)
+    end
+    return pos
+end

@@ -116,3 +116,7 @@ Function documentation:
             -Returns a list of players that are visible from the "ply"
             ply     : Player to check visibility from
             dist    : (optional) Maximum distance from ply.
+        LAWLIB:GetTopOfPlayer(ply, heightOffset)
+            -Returns the top of the player's OBB. This scales with PPM models
+            ply             : Player to check
+            heightOffset    : (Optional) Additional height to add on top of player's OBB
