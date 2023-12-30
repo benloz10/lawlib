@@ -31,11 +31,13 @@ function LAWLIB:GetTopOfPlayer(ply, heightOffset)
     if heightOffset == nil then heightOffset = 0 end
     local hMin = ply:OBBMins()
     local hMax = ply:OBBMaxs()
-    local height = hMax.z - hMin.z + heightOffset
+    local height = hMax.z - hMin.z
     local pos = ply:GetPos()
-    pos.z = pos.z + hMax.z
-    if ply:IsPony() then
+    pos.z = pos.z + hMax.z + heightOffset
+    if ply.IsPony and ply:IsPony() then
         pos = pos + ply:GetUp() * (height * 0.35)
+    else
+        pos = pos + ply:GetUp() * (height * 0.1)
     end
     return pos
 end
