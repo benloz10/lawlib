@@ -110,3 +110,9 @@ Function documentation:
             -Returns a formated time text with the given time.
             Int time    : Time in seconds to calculate.
             Example: 1 day, 4 hours, 13 minutes, 2 seconds
+    Players:
+        SHARED:
+        LAWLIB:GetVisiblePlayers(ply, dist)
+            -Returns a list of players that are visible from the "ply"
+            ply     : Player to check visibility from
+            dist    : (optional) Maximum distance from ply.
