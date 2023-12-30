@@ -1,9 +1,11 @@
 LAWLIB (Lawly's Library) is intended to be used with any of my addons. Most requiring it.
 
 Fonts:
-    LAWLIB:ExtraLarge
+    LAWLIB:Medium
     LAWLIB:Large
+    LAWLIB:ExtraLarge
     LAWLIB:Monospace
+    LAWLIB:Monospace:Thicc
     LAWLIB:Monospace:Large
 
 VGUI:
