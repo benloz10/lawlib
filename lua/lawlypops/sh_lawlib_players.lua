@@ -16,9 +16,10 @@ function LAWLIB:GetVisiblePlayers(ply, dist)
 
         local target = plyList[i]
         if target ~= ply and
+        target:Health() > 0 and
+        not target:GetNoDraw() and
         distCheck and
         target:IsLineOfSightClear(ply) and
-        target:Health() > 0 and
         not target:InVehicle() then
             table.insert(visible, target)
         end
