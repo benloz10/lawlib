@@ -35,6 +35,11 @@ function LFrame:SetTitleHoverText(txt)
     self.HoverText = txt
 end
 
+function LFrame:Close()
+    self:Remove()
+    if self.CloseSound then surface.PlaySound(self.CloseSound) end
+end
+
 function LFrame:AddElements()
     self.TitleBar = vgui.Create("DPanel", self)
     self.TitleBar:SetSize(self:GetWide(), 30)
@@ -73,8 +78,7 @@ function LFrame:AddElements()
     self.CloseButton:SetFont("LAWLIB:Monospace:Large")
     self.CloseButton:SetContentAlignment(5)
     function self.CloseButton:OnMousePressed()
-        self.Root:Remove()
-        if self.Root.CloseSound then surface.PlaySound(self.Root.CloseSound) end
+        self.Root:Close()
     end
     self:InvalidateLayout()
 
