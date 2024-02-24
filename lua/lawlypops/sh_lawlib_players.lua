@@ -8,13 +8,12 @@ function LAWLIB:GetVisiblePlayers(ply, dist)
 
     for i=1, #plyList do
         local target = plyList[i]
-        
+
         local distCheck = true
         if dist > 0 and ply:GetPos():DistToSqr(target:GetPos()) > maxviewDist then
             distCheck = false
         end
 
-        local target = plyList[i]
         if target ~= ply and
         target:Health() > 0 and
         not target:GetNoDraw() and
@@ -22,6 +21,17 @@ function LAWLIB:GetVisiblePlayers(ply, dist)
         target:IsLineOfSightClear(ply) and
         not target:InVehicle() then
             table.insert(visible, target)
+        end
+
+        if target ~= ply and
+        target:InVehicle() and
+        distCheck and
+        target:IsLineOfSightClear(ply) then
+            local veh = target:GetVehicle()
+
+            if veh:GetNWBool("dsit_flag") then
+                table.insert(visible, target)
+            end
         end
     end
     return visible
