@@ -205,3 +205,57 @@ function LConfirm:AddElements()
 end
 
 vgui.Register("LConfirm", LConfirm, "DPanel")
+
+local LScrollPanel = {}
+
+function LScrollPanel:Init()
+    self:SetMouseInputEnabled(true)
+    self.movingPanel = vgui.Create("Panel", PNL)
+    self.movingPanel:SetPos(0,0)
+    self.movingPanel:SetSize(self:GetSize())
+    self.ScrollOffset = 0
+
+    self.MouseX = 0
+    self.MouseMoveDistance = 0
+
+    self.Items = {}
+end
+
+function LScrollPanel:Think()
+    if input.IsMouseDown(MOUSE_LEFT) then
+        self.MouseMovedDistance = gui.MouseX() - self.MouseX
+        self.ScrollOffset = self.MouseMovedDistance
+    end
+    self.movingPanel:SetX(self.ScrollOffset)
+end
+
+function LScrollPanel:OnMousePressed(mouseBtn)
+    if mouseBtn == MOUSE_LEFT then
+        self.MouseX = gui.MouseX()
+    end
+end
+
+function LScrollPanel:OnMouseReleased()
+
+end
+
+function LScrollPanel:AddItem(panel)
+    panel:SetParent(self.movingPanel)
+    panel:Dock(LEFT)
+
+    self.movingPanel:InvalidateLayout(true)
+
+    table.insert(self.Items, panel)
+end
+
+function LScrollPanel:Paint() end
+
+function LScrollPanel:GetItems()
+    return self.Items
+end
+
+function LScrollPanel:GetCanvas()
+    return self.movingPanel
+end
+
+vgui.Register("LScrollPanel", LScrollPanel, "DPanel")
