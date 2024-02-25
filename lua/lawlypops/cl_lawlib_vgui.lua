@@ -209,41 +209,52 @@ vgui.Register("LConfirm", LConfirm, "DPanel")
 local LScrollPanel = {}
 
 function LScrollPanel:Init()
+    self:InvalidateParent(true)
     self:SetMouseInputEnabled(true)
-    self.movingPanel = vgui.Create("Panel", PNL)
+    self.movingPanel = vgui.Create("Panel", self)
     self.movingPanel:SetPos(0,0)
     self.movingPanel:SetSize(self:GetSize())
+
     self.ScrollOffset = 0
 
-    self.MouseX = 0
-    self.MouseMoveDistance = 0
+    self.LastMousePos = 0
+    self.DeltaMouse = 0
 
     self.Items = {}
+    self.ItemWidth = 0
+    self.ItemHeight = 0
 end
 
 function LScrollPanel:Think()
     if input.IsMouseDown(MOUSE_LEFT) then
-        self.MouseMovedDistance = gui.MouseX() - self.MouseX
-        self.ScrollOffset = self.MouseMovedDistance
+        self.DeltaMouse = gui.MouseX() - self.LastMousePos
+        self.ScrollOffset = self.ScrollOffset + self.DeltaMouse
     end
+    self.LastMousePos = gui.MouseX()
     self.movingPanel:SetX(self.ScrollOffset)
 end
 
-function LScrollPanel:OnMousePressed(mouseBtn)
+function LScrollPanel:OnMousePressed(mouseBtn)e
     if mouseBtn == MOUSE_LEFT then
-        self.MouseX = gui.MouseX()
     end
 end
 
 function LScrollPanel:OnMouseReleased()
-
 end
 
 function LScrollPanel:AddItem(panel)
     panel:SetParent(self.movingPanel)
     panel:Dock(LEFT)
 
-    self.movingPanel:InvalidateLayout(true)
+
+    local mL, mT, mR, mB = panel:GetDockMargin()
+    local mOffset = mL + mR
+
+    self.ItemWidth = self.ItemWidth + panel:GetWide() + mOffset
+    self.ItemHeight = math.max(self.ItemWidth, panel:GetTall())
+
+    self.movingPanel:SetSize(self.ItemWidth, 2000)
+    self.movingPanel:InvalidateParent(true)
 
     table.insert(self.Items, panel)
 end
