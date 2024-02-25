@@ -211,11 +211,10 @@ local LScrollPanel = {}
 function LScrollPanel:Init()
     self:InvalidateParent(true)
     self:SetMouseInputEnabled(true)
-    self.movingPanel = vgui.Create("Panel", self)
-    self.movingPanel:SetPos(0,0)
-    self.movingPanel:SetSize(self:GetSize())
 
     self.ScrollOffset = 0
+    self.SmoothScrollOffset = 0
+    self.MaxScroll = 100
 
     self.LastMousePos = 0
     self.DeltaMouse = 0
@@ -230,11 +229,20 @@ function LScrollPanel:Think()
         self.DeltaMouse = gui.MouseX() - self.LastMousePos
         self.ScrollOffset = self.ScrollOffset + self.DeltaMouse
     end
+    self.ScrollOffset = math.Clamp(self.ScrollOffset, -self.MaxScroll + ScrW()/2, ScrW()/2)
+
     self.LastMousePos = gui.MouseX()
-    self.movingPanel:SetX(self.ScrollOffset)
+    self.SmoothScrollOffset = math.Approach(self.SmoothScrollOffset, self.ScrollOffset, math.abs(self.SmoothScrollOffset - self.ScrollOffset)/10)
+    for i, panel in ipairs(self.Items) do
+        panel:SetX(self.SmoothScrollOffset + (panel.Spacing+panel:GetWide())*(i-1))
+    end
 end
 
-function LScrollPanel:OnMousePressed(mouseBtn)e
+function LScrollPanel:OnMouseWheeled(delta)
+    self.ScrollOffset = self.ScrollOffset + delta*200
+end
+
+function LScrollPanel:OnMousePressed(mouseBtn)
     if mouseBtn == MOUSE_LEFT then
     end
 end
@@ -243,18 +251,10 @@ function LScrollPanel:OnMouseReleased()
 end
 
 function LScrollPanel:AddItem(panel)
-    panel:SetParent(self.movingPanel)
-    panel:Dock(LEFT)
+    panel:SetParent(self)
+    panel:SetTall(self:GetTall())
 
-
-    local mL, mT, mR, mB = panel:GetDockMargin()
-    local mOffset = mL + mR
-
-    self.ItemWidth = self.ItemWidth + panel:GetWide() + mOffset
-    self.ItemHeight = math.max(self.ItemWidth, panel:GetTall())
-
-    self.movingPanel:SetSize(self.ItemWidth, 2000)
-    self.movingPanel:InvalidateParent(true)
+    self.MaxScroll = self.MaxScroll + panel:GetWide() + panel.Spacing
 
     table.insert(self.Items, panel)
 end
@@ -265,8 +265,4 @@ function LScrollPanel:GetItems()
     return self.Items
 end
 
-function LScrollPanel:GetCanvas()
-    return self.movingPanel
-end
-
-vgui.Register("LScrollPanel", LScrollPanel, "DPanel")
+vgui.Register("LScrollPanel", LScrollPanel, "Panel")
