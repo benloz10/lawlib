@@ -272,12 +272,37 @@ AccessorFunc(LScrollPanel, "Spacing", "Spacing", FORCE_NUMBER)
 function LScrollPanel:AddItem(panel)
     panel:SetParent(self)
     panel:SetTall(self:GetTall())
+    panel.ScrollPanelIndex = #self.Items+1
+    panel.MouseStart = 0
+    
+    panel:SetMouseInputEnabled(true)
+    function panel:OnMousePressed()
+        self.MouseStart = gui.MouseX()
+    end
+    function panel:OnMouseReleased()
+        if math.abs(self.MouseStart - gui.MouseX()) > 10 then return end
+        panel:GetParent():Select(self.ScrollPanelIndex)
+    end
 
     self.MaxScroll = self.MaxScroll + panel:GetWide() + self.Spacing
 
     self.ScrollLimit = math.max(self.ScrollLimit, panel:GetWide() + self.Spacing)
 
     table.insert(self.Items, panel)
+end
+
+function LScrollPanel:Select(index)
+    if index < 1 or index > #self.Items then return false end
+    self.ScrollOffset = ScrW()/2 - (self.Spacing+self.Items[index]:GetWide()) * (index-1) - self.Items[index]:GetWide()/2
+end
+
+function LScrollPanel:SelectPanel(panel)
+    for i, item in ipairs(self.Items) do
+        if item ~= panel then continue end
+        self:Select(i)
+        return i
+    end
+    return false
 end
 
 function LScrollPanel:Paint() end
