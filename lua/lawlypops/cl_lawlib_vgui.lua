@@ -1,10 +1,23 @@
 local LButton = {}
 
+function LButton:Init()
+    self.HoverColor = Color(198,199,255)
+    self.DefaultColor = Color(255,255,255)
+end
+
+AccessorFunc(LButton, "HoverColor", "HoverColor", FORCE_COLOR)
+AccessorFunc(LButton, "DefaultColor", "DefaultColor", FORCE_COLOR)
+
 function LButton:Paint(w,h)
     surface.SetDrawColor(27,27,27)
     surface.DrawRect(0,0,w,h)
     surface.SetDrawColor(97,97,97)
     surface.DrawOutlinedRect(0,0,w,h,2)
+    if self:IsHovered() and self:GetTextColor() ~= self.HoverColor then
+        self:SetTextColor(self.HoverColor)
+    elseif not self:IsHovered() and self:GetTextColor() ~= self.DefaultColor then
+        self:SetTextColor(self.DefaultColor)
+    end
 end
 
 vgui.Register("LButton", LButton, "DButton")
@@ -212,6 +225,10 @@ function LScrollPanel:Init()
     self:InvalidateParent(true)
     self:SetMouseInputEnabled(true)
 
+    self.Spacing = 5
+
+    self.ScrollLimit = 0
+
     self.ScrollOffset = 0
     self.SmoothScrollOffset = 0
     self.MaxScroll = 100
@@ -225,16 +242,16 @@ function LScrollPanel:Init()
 end
 
 function LScrollPanel:Think()
-    if input.IsMouseDown(MOUSE_LEFT) then
+    if (self:IsHovered() or self:IsChildHovered()) and input.IsMouseDown(MOUSE_LEFT) then
         self.DeltaMouse = gui.MouseX() - self.LastMousePos
         self.ScrollOffset = self.ScrollOffset + self.DeltaMouse
     end
-    self.ScrollOffset = math.Clamp(self.ScrollOffset, -self.MaxScroll + ScrW()/2, ScrW()/2)
+    self.ScrollOffset = math.Clamp(self.ScrollOffset, -self.MaxScroll + self.ScrollLimit*1.4, ScrW() - self.ScrollLimit)
 
     self.LastMousePos = gui.MouseX()
     self.SmoothScrollOffset = math.Approach(self.SmoothScrollOffset, self.ScrollOffset, math.abs(self.SmoothScrollOffset - self.ScrollOffset)/10)
     for i, panel in ipairs(self.Items) do
-        panel:SetX(self.SmoothScrollOffset + (panel.Spacing+panel:GetWide())*(i-1))
+        panel:SetX(self.SmoothScrollOffset + (self.Spacing+panel:GetWide())*(i-1))
     end
 end
 
@@ -250,11 +267,15 @@ end
 function LScrollPanel:OnMouseReleased()
 end
 
+AccessorFunc(LScrollPanel, "Spacing", "Spacing", FORCE_NUMBER)
+
 function LScrollPanel:AddItem(panel)
     panel:SetParent(self)
     panel:SetTall(self:GetTall())
 
-    self.MaxScroll = self.MaxScroll + panel:GetWide() + panel.Spacing
+    self.MaxScroll = self.MaxScroll + panel:GetWide() + self.Spacing
+
+    self.ScrollLimit = math.max(self.ScrollLimit, panel:GetWide() + self.Spacing)
 
     table.insert(self.Items, panel)
 end
