@@ -237,9 +237,6 @@ function LScrollPanel:Init()
     self.LastMousePos = 0
     self.DeltaMouse = 0
 
-    self.ItemYPos = 0
-    self.Deleting = false
-
     self.Items = {}
     self.ItemWidth = 0
     self.ItemHeight = 0
@@ -257,20 +254,6 @@ function LScrollPanel:Think()
     for i, panel in ipairs(self.Items) do
         panel:SetX(self.SmoothScrollOffset + (self.Spacing+panel:GetWide())*(i-1))
     end
-    if self.ItemYPos ~= 0 then
-        if self.Deleting then
-            self:Dock(NODOCK)
-            self.ItemYPos = self.ItemYPos*1.2
-            if math.abs(self.ItemYPos) > self:GetTall() then
-                self:Remove()
-            end
-            for i, panel in ipairs(self.Items) do
-                panel:SetY(self.ItemYPos)
-            end
-        else
-
-        end
-    end
 end
 
 function LScrollPanel:OnMouseWheeled(delta)
@@ -287,26 +270,6 @@ end
 
 AccessorFunc(LScrollPanel, "Spacing", "Spacing", FORCE_NUMBER)
 
-function LScrollPanel:FancyDelete(dir)
-    self.ItemYPos = 0
-    self.Deleting = true
-    if dir == BOTTOM then
-        self.ItemYPos = self.ItemYPos + 1
-    elseif dir == TOP then
-        self.ItemYPos = self.ItemYPos - 1
-    end
-end
-
-function LScrollPanel:FancyAppear(dir)
-    self.ItemYPos = self.Items[1]:GetHeight()
-    self.Deleting = false
-    if dir == BOTTOM then
-        self.ItemYPos = self.ItemYPos - 1
-    elseif dir == TOP then
-        self.ItemYPos = self.ItemYPos +  1
-    end
-end
-
 function LScrollPanel:AddItem(panel)
     panel:SetParent(self)
     panel:SetTall(self:GetTall())
@@ -314,7 +277,11 @@ function LScrollPanel:AddItem(panel)
     panel.MouseStart = 0
     
     panel:SetMouseInputEnabled(true)
-    function panel:OnMousePressed()
+    if panel.OnMousePressed then panel.oldMousePressed = panel.OnMousePressed end
+
+    function panel:OnMousePressed(mbutton)
+        if panel.oldMousePressed then panel:oldMousePressed(mbutton) end
+        panel.oldmousePressed = nil
         self.MouseStart = gui.MouseX()
     end
     function panel:OnMouseReleased()
