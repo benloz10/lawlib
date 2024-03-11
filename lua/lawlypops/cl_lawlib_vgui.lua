@@ -1,17 +1,19 @@
 local LButton = {}
 
 function LButton:Init()
-    self.HoverColor = Color(198,199,255)
-    self.DefaultColor = Color(255,255,255)
+    self.HoverColor = LAWLIB.Col.HoverColor
+    self.DefaultColor = LAWLIB.Col.White
+    self.SuccessSound = "buttons/button15.wav"
+    self.FailSound = "buttons/blip16.wav"
 end
 
 AccessorFunc(LButton, "HoverColor", "HoverColor", FORCE_COLOR)
 AccessorFunc(LButton, "DefaultColor", "DefaultColor", FORCE_COLOR)
 
 function LButton:Paint(w,h)
-    surface.SetDrawColor(27,27,27)
+    surface.SetDrawColor(LAWLIB.Col.DarkBackground)
     surface.DrawRect(0,0,w,h)
-    surface.SetDrawColor(97,97,97)
+    surface.SetDrawColor(LAWLIB.Col.Highlight)
     surface.DrawOutlinedRect(0,0,w,h,2)
     if self:IsHovered() and self:GetTextColor() ~= self.HoverColor then
         self:SetTextColor(self.HoverColor)
@@ -24,7 +26,7 @@ vgui.Register("LButton", LButton, "DButton")
 
 local LFrame = {}
 function LFrame:Init()
-    self.BGColor = Color(40,40,40)
+    self.BGColor = LAWLIB.Col.Background
 	self:SetPaintBackgroundEnabled( true )
 	self:SetPaintBorderEnabled( true )
 
@@ -56,7 +58,7 @@ end
 function LFrame:AddElements()
     self.TitleBar = vgui.Create("DPanel", self)
     self.TitleBar:SetSize(self:GetWide(), 30)
-    self.TitleBar:SetBackgroundColor(Color(56,56,56))
+    self.TitleBar:SetBackgroundColor(LAWLIB.Col.TitleBar)
     
     self.TitleText = vgui.Create("DLabel", self.TitleBar)
     self.TitleText:SetFont("DermaLarge")
@@ -109,14 +111,14 @@ vgui.Register("LFrame", LFrame, "EditablePanel")
 local LProgress = {}
 
 function LProgress:Init()
-    self:SetBackgroundColor(Color(23,23,23))
+    self:SetBackgroundColor(LAWLIB.Col.DarkBackground)
 	self:SetPaintBackgroundEnabled( false )
 	self:SetPaintBorderEnabled( false )
 
     self.Bar = vgui.Create("DPanel", self)
     self.Bar:Dock(LEFT)
     self.Bar:SetWide(0)
-    self.Bar:SetBackgroundColor(Color(0,255,255))
+    self.Bar:SetBackgroundColor(LAWLIB.Col.Cyan)
 end
 
 function LProgress:SetFraction(val)
@@ -136,16 +138,16 @@ local LConfirm = {}
 function LConfirm:Init()
     self:SetSize(ScrW()*0.3, ScrW()*0.07)
     self:DockPadding(10,10,10,10)
-    self:SetBackgroundColor(Color(40,40,40))
+    self:SetBackgroundColor(LAWLIB.Col.Background)
     self:Center()
     self:AddElements()
     self:MakePopup()
 
-    self.OutlineColor = Color(100,100,100)
+    self.OutlineColor = LAWLIB.Col.Highlight
 
     self.BGFade = vgui.Create("DPanel")
     self.BGFade:SetSize(ScrW(), ScrH())
-    self.BGFade:SetBackgroundColor(Color(0,0,0,240))
+    self.BGFade:SetBackgroundColor(LAWLIB.Col.TransparentBackground)
 end
 
 function LConfirm:OnRemove()
@@ -193,25 +195,27 @@ function LConfirm:AddElements()
 
     self.Text:SetText("Are you sure?")
     self.Text:SetFont("DermaLarge")
-    self.Text:SetTextColor(Color(255,255,255))
+    self.Text:SetTextColor(LAWLIB.Col.White)
     self.Text:SetContentAlignment(8)
 
     self.YesBtn:SetText("Yes")
     self.YesBtn:SetFont("DermaLarge")
-    self.YesBtn:SetTextColor(Color(0,200,0))
+    self.YesBtn:SetTextColor(LAWLIB.Col.DarkGreen)
     self.YesBtn:Dock(LEFT)
     self.YesBtn:SetWide(self:GetWide()*0.4)
     self.YesBtn.OnMousePressed = function()
+        surface.PlaySound(self.NoBtn.SuccessSound)
         if self.ConfirmAction then self:ConfirmAction() end
         self:Remove()
     end
 
     self.NoBtn:SetText("No")
     self.NoBtn:SetFont("DermaLarge")
-    self.NoBtn:SetTextColor(Color(200,0,0))
+    self.NoBtn:SetTextColor(LAWLIB.Col.DarkRed)
     self.NoBtn:Dock(RIGHT)
     self.NoBtn:SetWide(self:GetWide()*0.4)
     self.NoBtn.OnMousePressed = function()
+        surface.PlaySound(self.NoBtn.SuccessSound)
         if self.DenyAction then self:DenyAction() end
         self:Remove()
     end
@@ -287,6 +291,9 @@ function LScrollPanel:AddItem(panel)
     function panel:OnMouseReleased()
         if math.abs(self.MouseStart - gui.MouseX()) > 10 then return end
         panel:GetParent():Select(self.ScrollPanelIndex)
+        if self.OnSelect then
+            self:OnSelect()
+        end
     end
 
     self.MaxScroll = self.MaxScroll + panel:GetWide() + self.Spacing
@@ -303,6 +310,11 @@ function LScrollPanel:Select(index)
         self.SmoothScrollOffset = self.ScrollOffset
         self.FirstSelect = false
     end
+    local item = self.Items[index]
+    if item.OnSelect then
+        item:OnSelect()
+    end
+    return self.Items[index]
 end
 
 function LScrollPanel:SelectPanel(panel)
