@@ -3,17 +3,21 @@ local LButton = {}
 function LButton:Init()
     self.HoverColor = LAWLIB.Col.HoverColor
     self.DefaultColor = LAWLIB.Col.White
+    self.BackgroundColor = LAWLIB.Col.DarkBackground
+    self.OutlineColor = LAWLIB.Col.Highlight
     self.SuccessSound = "buttons/button15.wav"
     self.FailSound = "buttons/blip16.wav"
 end
 
 AccessorFunc(LButton, "HoverColor", "HoverColor", FORCE_COLOR)
 AccessorFunc(LButton, "DefaultColor", "DefaultColor", FORCE_COLOR)
+AccessorFunc(LButton, "BackgroundColor", "BackgroundColor", FORCE_COLOR)
+AccessorFunc(LButton, "OutlineColor", "OutlineColor", FORCE_COLOR)
 
 function LButton:Paint(w,h)
-    surface.SetDrawColor(LAWLIB.Col.DarkBackground)
+    surface.SetDrawColor(self.BackgroundColor)
     surface.DrawRect(0,0,w,h)
-    surface.SetDrawColor(LAWLIB.Col.Highlight)
+    surface.SetDrawColor(self.OutlineColor)
     surface.DrawOutlinedRect(0,0,w,h,2)
     if self:IsHovered() and self:GetTextColor() ~= self.HoverColor then
         self:SetTextColor(self.HoverColor)
@@ -256,6 +260,7 @@ function LScrollPanel:Think()
     self.LastMousePos = gui.MouseX()
     self.SmoothScrollOffset = math.Approach(self.SmoothScrollOffset, self.ScrollOffset, math.abs(self.SmoothScrollOffset - self.ScrollOffset)/10)
     for i, panel in ipairs(self.Items) do
+        if not IsValid(panel) then continue end
         panel:SetX(self.SmoothScrollOffset + (self.Spacing+panel:GetWide())*(i-1))
     end
 end
