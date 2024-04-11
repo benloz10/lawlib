@@ -38,6 +38,7 @@ function LFrame:Init()
     self.HoverText = nil
 
     timer.Simple(FrameTime(), function()
+        if not IsValid(self) then return end
         self:AddElements()
     end)
 end
