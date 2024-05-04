@@ -297,9 +297,6 @@ function LScrollPanel:AddItem(panel)
     function panel:OnMouseReleased()
         if math.abs(self.MouseStart - gui.MouseX()) > 10 then return end
         panel:GetParent():Select(self.ScrollPanelIndex)
-        if self.OnSelect then
-            self:OnSelect()
-        end
     end
 
     self.MaxScroll = self.MaxScroll + panel:GetWide() + self.Spacing
