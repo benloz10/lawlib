@@ -100,6 +100,14 @@ net.Receive("lawlib_economy", function(len, ply)
             end
             ply:addMoney(-tbl.Cost)
             LAWLIB:Notify(ply, "Purchased " .. tbl.Name .. " for " .. DarkRP.formatMoney(tbl.Cost), 0, 4)
+        elseif bitsystem then
+            local money = ply:GetBits()
+            if money < tbl.Cost then
+                LAWLIB:Notify(ply, "You cannot afford that!", 1, 4)
+                return
+            end
+            ply:AddBits(-tbl.Cost)
+            LAWLIB:Notify(ply, "Purchased " .. tbl.Name .. " for " .. bitsystem.FormatMoney(tbl.Cost), 0, 4)
         else
             LAWLIB:Notify(ply, "Purchased " .. tbl.Name .. " for " .. tbl.Cost, 0, 4)
         end

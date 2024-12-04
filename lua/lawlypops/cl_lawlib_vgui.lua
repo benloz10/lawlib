@@ -49,6 +49,9 @@ end
 
 function LFrame:SetTitle(txt)
     self.DefaultText = txt
+    if IsValid(self.TitleText) then
+        self.TitleText:SetText(txt)
+    end
 end
 
 function LFrame:SetTitleHoverText(txt)
@@ -58,6 +61,14 @@ end
 function LFrame:Close()
     self:Remove()
     if self.CloseSound then surface.PlaySound(self.CloseSound) end
+end
+
+function LFrame:LoadDefault()
+    self:ParentToHUD()
+    self:SetSize(ScrW()*0.8, ScrH()*0.8)
+    self:SetTitle("Default Title")
+    self:MakePopup()
+    self:Center()
 end
 
 function LFrame:AddElements()
